@@ -1,6 +1,6 @@
 # metaquant: Estimating Means, Standard Deviations, and Visualizing Distributions Using Quantiles
 
-The `metaquant` package implements a novel density-based approach for estimating unknown means, visualizing distributions, and performing meta-analyses of quantiles, as introduced by De Livera et al.
+The `metaquant` package implements a novel density-based approach for estimating unknown means, visualizing distributions, and meta-analyses of quantiles, as introduced by De Livera et al.
 
 ## Overview
 
@@ -23,4 +23,4 @@ devtools::install_github("metaanalysisR/metaquant")
 ```
 ## Usage
 
-See (...link to the vignettes) for a detailed guide on using the `metaquant` package.
+See (*link to the vignettes*) for a detailed guide on using the `metaquant` package.
