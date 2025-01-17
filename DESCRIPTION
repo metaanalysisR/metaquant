@@ -1,0 +1,21 @@
+Package: metaquant
+Type: Package
+Title: Estimating Means, Standard Deviations and Visualising Distributions using Quantiles
+Version: 0.1.0
+Authors@R: c(
+	person("Alysha","De Livera",role="aut",email="a.delivera@latrobe.edu.au"),
+	person("Luke","Prendergast",role="aut",email="luke.prendergast@latrobe.edu.au"),
+	person("Udara","Kumaranathunga",role="cre",email="U.Kumaranathunga@latrobe.edu.au"))
+Maintainer: Udara Kumaranathunga <U.Kumaranathunga@latrobe.edu.au>
+Author: Alysha De Livera [aut], Luke Prendergast [aut], Udara Kumaranathunga [cre]
+Description: Implements a novel density-based approach for estimating unknown means, visualizing distributions, 
+	and meta-analyses of quantiles, as introduced by De Livera et al. 
+License: GPL-3
+Encoding: UTF-8
+Depends: R (>= 3.5.0)
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: gld, sld, stats, ggplot2, magrittr, dplyr, estmeansd
+
+
