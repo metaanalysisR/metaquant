@@ -17,7 +17,6 @@ library(metaquant)
 Alternatively, the development version of the package is available on GitHub. To install this version, the user needs to ensure that Rtools has been installed and integrated beforehand.
 
 ```R
-# Install from GitHub
 # install.packages("devtools")
 library(devtools)
 devtools::install_github("metaanalysisR/metaquant")
