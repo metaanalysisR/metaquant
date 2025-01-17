@@ -8,9 +8,16 @@ The `metaquant` package provides functions for estimating means, standard deviat
 
 ## Installation
 
-### From CRAN
-You can install the stable version of `metaquant` directly from CRAN as follows:
+You can install  `metaquant` directly from CRAN as follows:
 ```R
 # Install from CRAN
 install.packages("metaquant")
 library(metaquant)
+
+Alternatively, the development version of the package is available on GitHub. To install this version, the user needs to ensure that Rtools has been installed and integrated beforehand.
+
+```R
+# Install from GitHub
+# install.packages("devtools")
+library(devtools)
+devtools::install_github("metaanalysisR/metaquant")
