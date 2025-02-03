@@ -1,0 +1,440 @@
+---
+title: "Using metaquant: A package to Estimate Means, Standard deviations and Visualising distributions using Quantiles"
+author: "Udara Kumaranathunga, Alysha M De Livera and Luke Prendergast "
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using metaquant: A package to Estimate Means, Standard deviations and Visualising distributions using Quantiles}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+The *metaquant* package provides functions for estimating means, standard deviations, and visualising distributions using quantile summary data. This package is designed focusing on meta-analyses with continuous outcomes, particularly when only quantile-based information (e.g., medians, quartiles, or extremes) is available in the studies being analyzed. By using flexible quantile-based distributions, *metaquant* enables researchers to handle quantile summary measures to support the implementation of a comprehensive meta-analysis.
+
+The package deals with three common scenarios of reported quantile data, each with the sample size:
+
+- **S\(_1\):** \{ \( a \), \( m \), \( b \) \}
+- **S\(_2\):** \{ \( q_1 \), \( m \), \( q_3 \) \}
+- **S\(_3\):** \{ \( a \), \( q_1 \), \( m \), \( q_3 \), \( b \) \}
+
+where \{ \( a \), \( q_1 \), \( m \), \( q_3 \), \( b \) \} denote the sample minimum, first quartile, the median, third quartile and the maximum, respectively.
+
+For the cases with all 5 number summary data is available (S\(_3\)), the package uses the *Generalized Lambda Distribution (GLD)*, a flexible family of distributions capable of approximating many common distributions (e.g., normal, logistic, and log-normal). Specifically, GLD using the
+FKML parameterisation ([Freimer et al., 1988](#Freimer-1988)), which is defined by its quantile function is used in the package. 
+
+When only 3-point summaries are available, such as in the Scenario 1 and 2 above (S\(_1\) and S\(_2\)), the package uses the quantile-based *skew logistic distribution (SLD)* ([van Staden and King, 2015](#vanStaden-2015)). Bases on these density based approaches (GLD and SLD), as well as other existing methods, the package provides functions to estimate summary measures such as sample means and standard deviations using the quantile summaries and sample sizes.
+
+In addition to the estimation of sample means and standard deviations, *metaquant* includes functions for visualising the estimated distributions of the sample data, covering all 3 scenarios above. The visualisation functions allow users to create density plots using only quantile summaries, enabling exploration of group differences, skewness, and heterogeneity across studies. 
+
+For more details on the methodology related to *metaquant*, refer to [De Livera et al. (2024)](#de-livera-2024).
+
+#### References {.unnumbered}
+
+<a id="de-livera-2024"></a> Alysha De Livera, Luke Prendergast, and Udara Kumaranathunga. A novel density-based approach for estimating unknown means, distribution visualisations, and meta-analyses of quantiles. *Submitted for Review*, 2024. (Article available on request to authors.)
+
+<a id="Freimer-1988"></a> Marshall Freimer, Georgia Kollia, Govind S. Mudholkar, and C. Thomas Lin. A study of the generalized Tukey lambda family. *Communications in Statistics-Theory and Methods*, 17(10):3547–3567, 1988.
+
+<a id="vanStaden-2015"></a> P. J. van Staden and R. A. R. King. The quantile-based skew logistic distribution. *Statistics & Probability Letters*, 96:109–116, 2015.
+
+
+# Installing metaquant
+
+*metaquant* can be download via CRAN as follows:
+
+```{r}
+#Using CRAN
+#install.packages("metaquant")
+library(metaquant)
+```
+
+Alternatively, the development version can be downloaded using GitHub. To install this version, the user needs to make sure that [Rtools](https://cran.r-project.org/bin/windows/Rtools/rtools44/rtools.html) has been installed and integrated prior.
+
+```{r}
+#install.packages("devtools")
+#library(devtools)
+#devtools::install_github("metaanalysisR/metaquant")
+```
+
+
+# Estimate Summary Statistics using Quantiles
+
+## Estimate Mean
+
+The function 'est.mean' estimates the sample mean of a study that presents one of the scenarios of quantile summaries. (i.e., either one of 3-point summaries (S\(_1\) or S\(_2\)) or 5-point summaries (S\(_3\)). 
+
+The 'est.mean' implements a flexible quantile-based distribution methods for estimating sample means proposed by [De Livera et al. (2024)](#de-livera-2024-2) as well as some existing methods for estimating sample means as described by [Luo et al. (2018)](#luo-2018) and [McGrath et al. (2020)](#Mc-2020).
+
+The estimation methods implemented in the function are the following:
+
+- 'gld/sld': The method of De Livera et al. (2024). (i.e., estimation using the Generalized Lambda Distribution (GLD) for 5-number summaries (S\(_3\)), and the Skew Logistic Distribution (SLD)  for 3-number summaries (S\(_1\) and S\(_2\)). This is set as the default estimation option in the function. 
+- 'luo': The method of Luo et al. (2018).
+- 'hozo/wan/bland': The method proposed by Wan et al. (2014). (i.e., the method of Hozo et al. (2005) for S\(_1\), method of Wan et al. (2014) for S\(_2\), and method of Bland (2015) for S\(_3\).} 
+- 'bc': The Box-Cox method proposed by McGrath et al. (2020).
+- 'qe': The quantile matching estimation method proposed by McGrath et al. (2020).
+
+
+#### Estimating mean using S\(_3\): \{ \( a \), \( q_1 \), \( m \), \( q_3 \), \( b \) \} {.unnumbered}
+
+To illustrate the usage of the function, we first generate example 5-point summary data using 'rlnorm' function in the 'stats' package.
+
+```{r}
+# Load the libraries
+library(metaquant)
+library(stats)
+```
+
+```{r}
+#Generate quantile summary data
+set.seed(123)
+n <- 100
+x <- rlnorm(n, 4, 0.3)
+quants <- c(min(x), quantile(x, probs = c(0.25, 0.5, 0.75)), max(x))
+quants
+```
+Next, assuming 'quants' represents a 5-point summary from a study where we need to estimate the sample mean, the default 'gld/sld' method is used for the estimation.
+
+```{r}
+#Estimate sample mean of S3 using 'gld/sld'
+estmean_gl <- est.mean(min = quants[1], 
+                       q1 = quants[2], 
+                       med = quants[3],
+                       q3 = quants[4],
+                       max = quants[5],
+                       n=n)
+estmean_gl
+```
+If one needs to estimate the sample mean using a defined alternative method, simply specify the method as follows.
+
+```{r}
+#Estimate sample mean of S3 using the method 'luo'
+estmean_luo <- est.mean(min = quants[1], 
+                        q1 = quants[2], 
+                        med = quants[3],
+                        q3 = quants[4],
+                        max = quants[5],
+                        n=n,
+                        method = "luo")
+estmean_luo
+```
+
+#### Estimating mean using S\(_1\): \{ \( a \), \( m \), \( b \) \} {.unnumbered}
+
+Suppose only the minimum, median, and maximum are available as your quantile summaries. 
+
+```{r}
+# 3-point summary data for S1
+quants1 <- c(min(x), quantile(x, probs = 0.5), max(x))
+quants1
+```
+
+Then, instead of providing all five quantile inputs to the function, you can use the arguments 'min', 'med', and 'max' along with the sample size 'n' to estimate the sample mean. To estimate the sample mean of S\(_1\) using 'gld/sld' method,
+
+```{r}
+#Estimate sample mean for S1
+estmean_sl_1 <- est.mean(min = quants1[1], 
+                        med = quants1[2],
+                        max = quants1[3],
+                        n=n,
+                        method = "gld/sld")
+estmean_sl_1
+```
+Similarly, the 'method' argument can be adjusted to use a different estimation method, as described above.
+
+#### Estimating mean using S\(_2\): \{ \( q_1 \), \( m \), \( q_3 \) \} {.unnumbered}
+
+Similarly, if only the first quartile, median, and third quartile are available, use the 'q\(_1\)', 'med' and 'q\(_3\)' arguments of the function.
+
+```{r}
+# 3-point summary data for S2
+quants2 <- quantile(x, probs = c(0.25, 0.5, 0.75))
+quants2
+```
+
+```{r}
+#Estimate sample mean for S2
+estmean_sl_2 <- est.mean(q1 = quants2[1], 
+                        med = quants2[2],
+                        q3 = quants2[3],
+                        method = "gld/sld")
+estmean_sl_2
+```
+
+Note that, the method 'gld/sld' under S\(_2\) does not require the sample size to estimate the sample mean, so the argument 'n' can be omitted in this case. However, all other methods require the sample size for the estimation.
+
+## Estimate Standard Deviation
+
+For completeness, the package provides the function 'est.sd' which estimates the sample standard deviation for a study reporting quantile summary data. This includes 3-point summaries (S\(_1\) or S\(_2\)) and 5-point summaries (S\(_3\)). While the function operates similarly to 'est.mean', it incorporates distinct estimation methods specific to standard deviation calculation..
+
+The following methods for estimating the standard deviation are implemented in the function:
+
+- 'shi/wan': The method proposed by Shi et al. (2020). 
+- 'gld/sld': The method of De Livera et al. (2024). (i.e., estimation using the Generalized Lambda Distribution (GLD) for 5-number summaries (S\(_3\)), and the Skew Logistic Distribution (SLD)  for 3-number summaries (S\(_1\) and S\(_2\)).
+- 'wan': The method proposed by Wan et al. (2014).
+- 'bc': The Box-Cox method proposed by McGrath et al. (2020).
+- 'qe': The quantile matching estimation method proposed by McGrath et al. (2020).
+
+The method of [Shi et al. (2020)](#shi-2020)  is set as the default estimation option in the function.
+
+For example, to estimate the sample standard deviation using a given 5-point summary, the 'est.sd' can be applied by providing the quantiles and the sample size as inputs. We use the same data 'quants' used in [section 3.1](#estimate-mean) with the default option 'shi/wan' as the estimation method. 
+
+```{r}
+#Estimate sample SD of S3 using 'shi/wan' method
+estsd_shi <- est.sd(min = quants[1], 
+                    q1 = quants[2], 
+                    med = quants[3],
+                    q3 = quants[4],
+                    max = quants[5],
+                    n=n)
+estsd_shi
+```
+## Estimation for Two Groups
+
+In addition to the functions 'est.mean' and 'est.sd', the package also provides two functions 'est.mean.2g' and est.sd.2g' for estimating the sample mean and standard deviation in two-group studies based on quantile summary measures. These functions specifically use the GLD or SLD methods, as the other estimation methods do not support variations for two-group cases. 
+
+Particularly, these functions implement the method proposed by [De Livera et al. (2024)](#de-livera-2024-2) for two-group cases. The approach uses the Generalized Lambda Distribution (GLD) for 5-number summaries (S\(_3\)), and the Skew Logistic Distribution (SLD) for 3-number summaries (S\(_1\) and S\(_2\)) to estimate sample statistics using quantiles by incorporating shared information across the two groups to improve the accuracy of the  estimates.
+
+As a result, these two functions does not require a 'method' argument to be specified. However, the functions include additional arguments to input the summary measures for the second group. 
+
+For instance, consider the following quantile summaries for two groups. In this case, the 'rexp' function from the 'stats' package is used to generate example samples with exponential distributions. You may need to load the necessary libraries if they are not already loaded.
+
+```{r}
+#Generate 5-point summary data for two groups
+set.seed(123)
+n_t <- 100
+n_c <- 120
+x_t <- rexp(n_t, 5)
+x_c <- rexp(n_c, 10)
+q_t <- c(min(x_t), quantile(x_t, probs = c(0.25, 0.5, 0.75)), max(x_t))
+q_c <- c(min(x_c), quantile(x_c, probs = c(0.25, 0.5, 0.75)), max(x_c))
+
+```
+
+Similarly to the single group case, the 'est.mean.2g' and est.sd.2g' functions can be applied as  below.
+
+```{r}
+#Estimate sample mean of S3 
+estmean_2g <- est.mean.2g(q_t[1],q_t[2],q_t[3],q_t[4],q_t[5],
+                          q_c[1],q_c[2],q_c[3],q_c[4],q_c[5],
+                          n.g1 = n_t,
+                          n.g2 = n_c)
+estmean_2g
+```
+
+
+```{r}
+#Estimate sample SD of S3 
+estsd_2g <- est.sd.2g(q_t[1],q_t[2],q_t[3],q_t[4],q_t[5],
+                      q_c[1],q_c[2],q_c[3],q_c[4],q_c[5],
+                      n.g1 = n_t,
+                      n.g2 = n_c)
+estsd_2g
+```
+
+When only three number summaries (S\(_1\) and S\(_2\)) are available, the corresponding inputs for the two groups can be used directly.
+
+#### References {.unnumbered}
+
+<a id="de-livera-2024-2"></a> Alysha De Livera, Luke Prendergast, and Udara Kumaranathunga. A novel density-based approach for estimating unknown means, distribution visualisations, and meta-analyses of quantiles. *Submitted for Review*, 2024. (Article available on request to authors.)
+
+<a id="luo-2018"></a> Dehui Luo, Xiang Wan, Jiming Liu, and Tiejun Tong. Optimally estimating the sample mean from the sample size, median, mid-range, and/or mid-quartile range. *Statistical methods in medical research*, 27(6):1785–1805,2018.
+
+<a id="Mc-2020"></a> Sean McGrath, XiaoFei Zhao, Russell Steele, Brett D Thombs, Andrea Benedetti, and DEPRESsion Screening Data (DEPRESSD) Collaboration. Estimating the sample mean and standard deviation from commonly reported quantiles in meta-analysis. *Statistical methods in medical research*, 29(9):2520–2537, 2020.
+
+<a id="shi-2020"></a> Jiandong Shi, Dehui Luo, Hong Weng, Xian-Tao Zeng, Lu Lin, Haitao Chu, and Tiejun Tong. Optimally estimating the sample standard deviation from the five-number summary. *Research synthesis methods*, 11(5):641–654, 2020.
+
+
+
+# Visualise Densities using Quantiles
+
+The 'plotdist' function estimates and visualizes the density curves of one or two groups (samples) using one of the quantile summary scenarios (i.e., either 3-point summaries (S\(_1\) or S\(_2\)) or 5-point summaries (S\(_3\)). It returns a customizable and interactive [plotly](https://cran.r-project.org/web/packages/plotly/index.html) object visualizing the estimated density curve(s) of individual studies as well as the pooled densities. 
+
+## Prepare the Dataset
+
+The input data to 'plotdist' should be a data frame containing the quantile summary data. For one-group studies, the input data frame can include the following columns:
+
+- stduy.index : study index or name
+- min.g1 :	minimum value.
+- q1.g1 :	first quartile.
+- med.g1 :	median.
+- q3.g1 :	third quartile.
+- max.g1 :	maximum value.
+- n.g1 :	sample size.
+
+For two-group studies, the data frame can also contain the following columns for the summary data of the second group: min.g2, q1.g2, med.g2, q3.g2, max.g2 and n.g2.
+
+If only 3-number summaries are available, only the respective columns for the 3-point summary should be included in the data frame.
+
+## Visualise Densities of One-Group Studies
+
+For example, consider the following dataset  which includes three one-group studies, each reporting 5-point summaries along with their respective sample sizes.
+
+```{r}
+# Dataset of 5-point summaries for 1 group
+data_s3 <- data.frame(
+  study.index = c("Study1", "Study2", "Study3"),
+  min.g1 = c(18, 19, 15),
+  q1.g1 = c(66, 71, 69),
+  med.g1 = c(73, 82, 81),
+  q3.g1 = c(80, 93, 89),
+  max.g1 = c(110, 115, 100),
+  n.g1 = c(226, 230, 200)
+)
+data_s3
+```
+
+Then, using the data above, the desnsity curves of the three stduies can be visualised in the same plot using 'plotdist' as illustrated below.
+
+```{r}
+# Plot densities 
+plot_s3 <- plotdist(
+  data_s3,
+  xmin = 10,
+  xmax = 125,
+  title = "Example Density Plot of S3",
+  xlab = "x data",
+  title.size = 11,
+  lab.size = 10,
+  color.g1 = "blue",
+  display.index = FALSE,
+  display.legend = FALSE
+)
+plot_s3
+```
+
+Note that the function parameters 'xmin' and 'xmax' must be specified by the user, where 'xmin' is a numeric value for the lower limit of the x-axis for density calculation and 'xmax' is a numeric value for its upper limit. To ensure the density curve is fully captured, it is recommended to set 'xmin' to a value smaller than the smallest minimum value across studies in the dataset, while setting 'xmax' to a value larger than the largest maximum value across the studies. If specific values are not provided for the above parameters, the function itself uses the minimum value of the 'min.' columns and maximum value of the 'max.' columns, for scenario S\(_1\)  or S\(_3\). Note that for scenario S\(_2\) , no default calculation is performed and an error occurs since there are no 'min.' and 'max.' columns. 
+
+Suppose you have a dataset of quantile summaries of 3 studies, each reporting 3-point summaries of S\(_1\) along with their sample sizes. 
+
+```{r}
+# Dataset of 3-point summaries for 1 group
+data_s1 <- data.frame(
+  study.index = c("Study1", "Study2", "Study3"),
+  min.g1 = c(18, 19, 15),
+  med.g1 = c(73, 82, 81),
+  max.g1 = c(110, 115, 100),
+  n.g1 = c(226, 230, 200)
+)
+data_s1
+```
+
+Note that, in this case, the data frame consists only of the columns representing the minimum, median and maximum values. Then, the desnsity curves of three studies presenting 3-point summaries can be visualised using 'plotdist' as illustrated below.
+
+```{r}
+# Plot densities 
+plot_s1 <- plotdist(
+  data_s1,
+  xmin = 10,
+  xmax = 125,
+  title = "Example Density Plot of S1",
+  xlab = "x data",
+  color.g1 = "purple",
+  display.index = FALSE,
+  display.legend = FALSE
+)
+plot_s1
+```
+
+## Visualise Densities of Two-Group Studies
+
+For instance, assume you have the following dataset of two-group studies, each reporting 5-point summaries for both group 1 and group 2 along with their respective sample sizes.
+
+```{r}
+# Dataset of 5-point summaries for 2 groups
+data_2g <- data.frame(
+  study.index = c("Study1", "Study2", "Study3"),
+  min.g1 = c(18, 19, 15),
+  q1.g1 = c(66, 71, 69),
+  med.g1 = c(73, 82, 81),
+  q3.g1 = c(80, 93, 89),
+  max.g1 = c(110, 115, 100),
+  n.g1 = c(226, 230, 200),
+  min.g2 = c(15, 15, 13),
+  q1.g2 = c(57, 59, 55),
+  med.g2 = c(66, 68, 60),
+  q3.g2 = c(74, 72, 69),
+  max.g2 = c(108, 101, 100),
+  n.g2 = c(201, 223, 198)
+)
+data_2g
+```
+
+Once you input the above data frame into 'plotdist' with the appropriate inputs, you can obtain the density curves of two groups, displayed in different colors you provide, within the same plot. Here, we use the default colors defined by the function.
+
+```{r}
+# Plot densities 
+plot_2g <- plotdist(
+  data_2g,
+  xmin = 10,
+  xmax = 125,
+  title = "Example Density Plot of Two Groups",
+  xlab = "x data",
+  title.size = 11,
+  label.g1 = "Treatment", 
+  label.g2 = "Control",
+  display.index = FALSE,
+  display.legend = TRUE
+)
+plot_2g
+```
+
+To display the legend labels, you need to provide the names of the groups for the 'label.g1' and 'label.g2' arguments and set 'display.legend = TRUE'.
+
+## Visualise Pooled Densities 
+
+If you need to generate pooled density plots, you can set the 'pooled.dist' or 'pooled.only' arguments to 'TRUE'. By default these arguments are set to 'FALSE'. When 'pooled.dist = TRUE', the pooled density curves will be displayed along with the individual density curves and when 'pooled.only = TRUE', only the pooled density curves will be plotted, excluding the individual curves. 
+
+For example, pooled curves can be added to the previous plot 'plot_2g' as follows. Again, the default colors assigned to the two groups are used. You can customize the colors by using the 'color.g1', 'color.g2', 'color.g1.pooled', and 'color.g2.pooled' arguments.
+
+```{r}
+# Plot densities with pooled curves
+plot_2g <- plotdist(
+  data_2g,
+  xmin = 10,
+  xmax = 125,
+  title = "Example Density Plot with Pooled Densities",
+  xlab = "x data",
+  title.size = 11,
+  label.g1 = "Treatment", 
+  label.g2 = "Control",
+  display.index = FALSE,
+  display.legend = FALSE,
+  pooled.dist = TRUE
+)
+plot_2g
+```
+
+
+
+# Contact and Session Information
+
+## Contact Information
+
+For any queries, contact Alysha De Livera [a.delivera@latrobe.edu.au](mailto:a.delivera@latrobe.edu.au) or Udara Kumaranathunga [u.kumaranathunga@latrobe.edu.au](mailto:u.kumaranathunga@latrobe.edu.au).
+
+## Session Information
+
+```{r}
+sessionInfo()
+```
+
+
+
+# References {.unnumbered}
+
+Alysha De Livera, Luke Prendergast, and Udara Kumaranathunga. A novel density-based approach for estimating unknown means, distribution visualisations, and meta-analyses of quantiles. *Submitted for Review*, 2024. (Article available on request to authors.)
+
+Marshall Freimer, Georgia Kollia, Govind S. Mudholkar, and C. Thomas Lin. A study of the generalized Tukey lambda family. *Communications in Statistics-Theory and Methods*, 17(10):3547–3567, 1988.
+
+P. J. van Staden and R. A. R. King. The quantile-based skew logistic distribution. *Statistics & Probability Letters*, 96:109–116, 2015.
+
+Dehui Luo, Xiang Wan, Jiming Liu, and Tiejun Tong. Optimally estimating the sample mean from the sample size, median, mid-range, and/or mid-quartile range. *Statistical methods in medical research*, 27(6):1785–1805,2018.
+
+Sean McGrath, XiaoFei Zhao, Russell Steele, Brett D Thombs, Andrea Benedetti, and DEPRESsion Screening Data (DEPRESSD) Collaboration. Estimating the sample mean and standard deviation from commonly reported quantiles in meta-analysis. *Statistical methods in medical research*, 29(9):2520–2537, 2020.
+
+Jiandong Shi, Dehui Luo, Hong Weng, Xian-Tao Zeng, Lu Lin, Haitao Chu, and Tiejun Tong. Optimally estimating the sample standard deviation from the five-number summary. *Research synthesis methods*, 11(5):641–654, 2020.
+
+
+
+
