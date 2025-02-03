@@ -19,4 +19,4 @@ devtools::install_github("metaanalysisR/metaquant")
 ```
 ## Usage
 
-See (*link to the vignettes*) for a detailed guide on using the `metaquant` package.
+See (*add link to the vignettes once published*) for a detailed guide on using the `metaquant` package.
