@@ -20,3 +20,8 @@ devtools::install_github("metaanalysisR/metaquant")
 ## Usage
 
 See (*add link to the vignettes once published*) for a detailed guide on using the `metaquant` package.
+
+## Reference
+
+Alysha De Livera, Luke Prendergast, and Udara Kumaranathunga. A novel density-based approach for estimating unknown means, distribution visualisations, and meta-analyses of quantiles. *Submitted for Review*, 2024, pre-print available here: https://arxiv.org/abs/2411.10971 
+
