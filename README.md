@@ -19,7 +19,7 @@ devtools::install_github("metaanalysisR/metaquant")
 ```
 ## Usage
 
-A detailed guide on using the `metaquant` package will be available.
+A detailed vignette with example datasets and code to prepare data and analyses are available at <https://bookdown.org/a2delivera/metaquant/>
 
 ## Reference
 
