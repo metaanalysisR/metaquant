@@ -9,7 +9,7 @@ Authors@R: c(
 Maintainer: Udara Kumaranathunga <U.Kumaranathunga@latrobe.edu.au>
 Author: Udara Kumaranathunga [cre], Alysha De Livera [aut], Luke Prendergast [aut] 
 Description: Implements a novel density-based approach for estimating unknown means, visualizing distributions, 
-	and meta-analyses of quantiles, as introduced by De Livera et al. 
+	and meta-analyses of quantiles, as introduced by De Livera et al. A detailed vignette with example datasets and code to prepare data and analyses are available at https://bookdown.org/a2delivera/metaquant/
 License: GPL-3
 Encoding: UTF-8
 Depends: R (>= 3.5.0)
