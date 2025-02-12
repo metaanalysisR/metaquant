@@ -320,8 +320,6 @@ true_summary<- function(dist, param){
       samples <-  qsl(p_values,unlist(param))   
     
     sigma2<-var(samples)
-    print(paste("NA",sigma2))
-    print(paste("param",param))
   }
 
   res <- list(mean = mu, variance = sigma2)
