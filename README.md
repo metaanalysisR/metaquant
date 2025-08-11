@@ -23,5 +23,5 @@ A detailed vignette with example datasets and code to prepare data and analyses 
 
 ## Reference
 
-Alysha De Livera, Luke Prendergast, and Udara Kumaranathunga. A novel density-based approach for estimating unknown means, distribution visualisations, and meta-analyses of quantiles. *Submitted for Review*, 2024, pre-print available here: https://arxiv.org/abs/2411.10971 
+Alysha De Livera, Luke Prendergast, and Udara Kumaranathunga. A novel density-based approach for estimating unknown means, distribution visualisations, and meta-analyses of quantiles, 2024. Pre-print available here: https://arxiv.org/abs/2411.10971 
 
