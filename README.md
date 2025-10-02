@@ -4,6 +4,8 @@ The `metaquant` package implements a novel density-based approach for estimating
 
 ## Installation
 
+[![](https://cranlogs.r-pkg.org/badges/metaquant)](https://cran.r-project.org/package=metaquant)
+
 You can install  `metaquant` directly from CRAN as follows:
 ```R
 # Install from CRAN
