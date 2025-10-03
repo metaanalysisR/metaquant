@@ -5,7 +5,6 @@ The `metaquant` package implements a novel density-based approach for estimating
 ## Installation
 
 [![CRAN_Status_Badge](https://badges.cranchecks.info/worst/metaquant.svg)](https://cran.r-project.org/package=metaquant)
-[![R-CMD-check](https://github.com/metaanalysisR/metaquant/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/metaanalysisR/metaquant/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Download_Badge](https://cranlogs.r-pkg.org/badges/metaquant)](https://cran.r-project.org/package=metaquant)
 [![CRAN_Download_Badge_All](https://cranlogs.r-pkg.org/badges/grand-total/metaquant)](https://cran.r-project.org/package=metaquant)
 
