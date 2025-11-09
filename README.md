@@ -1,4 +1,4 @@
-# metaquant: Estimating Means, Standard Deviations, and Visualizing Distributions Using Quantiles
+# metaquant: Meta-Analysis of Quantiles and Functions of Quantiles
 
 [![CRAN_Status_Badge](https://badges.cranchecks.info/worst/metaquant.svg)](https://cran.r-project.org/package=metaquant)
 [![CRAN_Download_Badge](https://cranlogs.r-pkg.org/badges/metaquant)](https://cran.r-project.org/package=metaquant)
