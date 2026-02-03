@@ -1,4 +1,4 @@
-# metaquant: Meta-Analysis of Quantiles and Functions of Quantiles
+# metaquant: An R Package for Using Quantiles in Meta-Analysis
 
 [![CRAN_Status_Badge](https://badges.cranchecks.info/worst/metaquant.svg)](https://cran.r-project.org/package=metaquant)
 [![CRAN_Download_Badge](https://cranlogs.r-pkg.org/badges/metaquant)](https://cran.r-project.org/package=metaquant)
@@ -23,7 +23,7 @@ devtools::install_github("metaanalysisR/metaquant")
 ```
 ## Usage
 
-A detailed vignette with example datasets and code to prepare data and analyses are available at <https://bookdown.org/a2delivera/metaquant/>
+A detailed vignette with example datasets and code to prepare data and analyses are available at <[https://bookdown.org/a2delivera/metaquant/](https://alyshadelivera.github.io/metaquant_vignette/)>
 
 ## Reference
 
