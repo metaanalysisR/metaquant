@@ -23,7 +23,7 @@ devtools::install_github("metaanalysisR/metaquant")
 ```
 ## Usage
 
-A detailed vignette with example datasets and code to prepare data and analyses are available at <[https://bookdown.org/a2delivera/metaquant/](https://alyshadelivera.github.io/metaquant_vignette/)>
+A detailed vignette with example datasets and code to prepare data and analyses are available at <[https://alyshadelivera.github.io/metaquant_vignette/](https://alyshadelivera.github.io/metaquant_vignette/)>
 
 ## Reference
 
